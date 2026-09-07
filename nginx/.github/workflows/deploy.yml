@@ -7,16 +7,17 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
 
     steps:
       - name: SSH로 EC2 접속하여 작업
-        uses: appleboy/ssh-action@1.2.2
+        uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{secrets.EC2_HOST}}
           username: ${{secrets.EC2_USERNAME}}
           key: ${{secrets.EC2_PRIVATE_KEY}}
 
+          script_stop: true
           script: |
             cd /home/ubuntu/client
             git pull origin main
@@ -24,6 +25,6 @@ jobs:
             docker stop client || true
             docker rm client || true
           
-            docker build -t client .
+            docker build --no-cache -t client .
 
             docker run -d --name client -p 80:80 client
