@@ -1,0 +1,18 @@
+name: Client
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-lastest
+
+    steps:
+      - name: SSH로 EC2 접속하여 작업
+        uses: appleboy/ssh-action@1.2.2
+        with:
+          host: ${{secrets.EC2_HOST}}
+          username: ${{secrets.EC2_USERNAME}}
+          key: ${{secrets.EC2_PRIVATE_KEY}}
